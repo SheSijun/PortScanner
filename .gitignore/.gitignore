@@ -1,0 +1,45 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+
+namespace PortScanner
+{
+    class Program
+    {
+       
+        static void Main(string[] args)
+        {
+            Console.WriteLine(" Start {0}...","58.213.150.98");
+
+            for (int port = 0; port < 65536; port++)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(PortScan), port);
+            }
+
+            Console.ReadLine();
+        }
+
+        static void PortScan(object port)
+        {
+            try
+            {
+                TcpClient client = new TcpClient();
+                client.Connect("58.213.150.98", (int)port);
+                if (client.Connected)
+                {
+                    Console.WriteLine("Port : {0} Open! ", port);
+                }
+            }
+
+       
+            catch { }
+            if ((int)port == 65535) Console.WriteLine("Finished!");
+        }
+
+    }
+}
